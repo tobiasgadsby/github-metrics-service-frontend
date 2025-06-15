@@ -1,15 +1,13 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import Health from "$lib/components/health.svelte";
-    import {Separator} from "$lib/components/ui/separator";
-    import * as Card from "$lib/components/ui/card";
-    import MetricCard from "$lib/components/ui/metricCard/metricCard.svelte";
-    import Repository from "$lib/components/repository.svelte";
+    import Health from "../lib/components/ui/health.svelte";
+    import MetricCard from "../lib/components/ui/metricCard/metricCard.svelte";
+    import Repository from "../lib/components/ui/repository.svelte";
+    import { Card } from "flowbite-svelte";
 
-
-    let repositories: API.Repository[] = [];
-
-    let pullRequests: API.PullRequest[] = [];
+    let repositories = null;
+    let selectedRepository = null;
+    let pullRequests = null;
 
     onMount(async () => {
         try {
@@ -22,7 +20,8 @@
         }
     })
 
-    async function updateData(repository: API.Repository) {
+    async function updateData(repository) {
+        console.log("UPDATE DATA");
         try {
             selectedRepository = repository;
             const response = await fetch(`http://localhost:2126/getPullRequests?repositoryId=${repository.id}`)
@@ -33,26 +32,21 @@
         }
     }
 
-    let selectedRepository: API.Repository | null = null;
+
 
 </script>
 
 <div class="flex gap-4 p-2 h-screen">
     <div class="w-1/4 h-full">
-        <Card.Root class="h-screen">
-            <Card.Header>
-                <Card.Title>Your Teams Repositories</Card.Title>
-            </Card.Header>
-            <Card.Content class="overflow-scroll h-full">
-                <div class="flex flex-col gap-2 overflow-scroll p-0">
-                    <Separator class="my-4"/>
-                    {#each repositories as repository}
-                        <Repository repository={repository} onclickhandler={() => updateData(repository)}
-                                    selectedRepository={selectedRepository}/>
-                    {/each}
-                </div>
-            </Card.Content>
-        </Card.Root>
+        <Card class="h-screen">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Your Teams Repositories</h5>
+            <div class="flex flex-col gap-2 overflow-scroll p-0">
+                {#each repositories as repository}
+                    <Repository repository={repository} onclickhandler={() => updateData(repository)}
+                                selectedRepository={selectedRepository}/>
+                {/each}
+            </div>
+        </Card>
     </div>
     <div class="flex flex-col gap-2 w-1/4">
         <h1>Branches</h1>

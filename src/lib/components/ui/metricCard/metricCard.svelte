@@ -1,12 +1,17 @@
 <script>
 
     import negativeIcon from "../../../assets/negative-icon.png";
+    import {Button} from "flowbite-svelte";
+    import Actions from "./actions.svelte";
 
 
     import {createEventDispatcher, onMount, tick} from "svelte";
     import { Card } from "flowbite-svelte";
+    import actions from "$lib/components/ui/metricCard/actions.svelte";
 
-    let {title, health, top, left, componentType, onResize} = $props();
+    let {title, health, top, left, componentType, componentId, onResize, onDeleteComponent} = $props();
+
+    console.log("COMPONENTID: ",componentId);
 
     let card;
 
@@ -15,6 +20,7 @@
         const rect = card.getBoundingClientRect();
         onResize({width: rect.width, height: rect.height});
     })
+
 
 </script>
 
@@ -25,10 +31,11 @@
     </div>
     <div class="grid grid-cols-2 gap-2 p-2">
         {#each health.comments as comment}
-            <div class="flex flex-row items-center justify-center gap-2">
+            <Button color="Light" class="flex flex-row items-center justify-center gap-2 outline p-1 px-2">
                 <img src={negativeIcon} class="h-3"/>
                 <p class="text-sm text-gray-300">{comment.details}</p>
-            </div>
+            </Button>
+            <Actions name={title} componentId={componentId} componentType={componentType} deleteComponent={onDeleteComponent}/>
         {/each}
     </div>
 

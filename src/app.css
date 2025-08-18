@@ -46,6 +46,7 @@
 
 button:hover {
     background-color: transparent !important;
+    cursor: pointer !important;
 }
 
 
